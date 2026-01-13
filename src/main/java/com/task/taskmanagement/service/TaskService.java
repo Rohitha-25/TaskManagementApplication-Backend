@@ -1,0 +1,45 @@
+package com.task.taskmanagement.service;
+
+import com.task.taskmanagement.entity.Task;
+import com.task.taskmanagement.repository.TaskRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
+
+@Service
+public class TaskService {
+    @Autowired
+    private TaskRepository taskRepository;
+
+    public List<Task> getAllTasks() {
+        return taskRepository.findAll();
+    }
+
+    public Optional<Task> getTaskById(Long id) {
+        return taskRepository.findById(id);
+    }
+
+    public Task createTask(Task task) {
+        return taskRepository.save(task);
+    }
+
+    public Task updateTask(Long id, Task updatedTask) {
+        Optional<Task> taskOpt = taskRepository.findById(id);
+
+        if (taskOpt.isPresent()) {
+            Task task = taskOpt.get();
+            task.setTitle(updatedTask.getTitle());
+            task.setDescription(updatedTask.getDescription());
+            task.setStatus(updatedTask.getStatus());
+
+            return taskRepository.save(task);
+        }
+        return null;
+    }
+
+    public void deleteTask(Long id) {
+        taskRepository.deleteById(id);
+    }
+}
